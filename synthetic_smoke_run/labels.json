@@ -1,0 +1,29 @@
+{
+  "synthetic": {
+    "instance_hash": "c29381df02cd350ef945f26dcb1646b2d5b75f8175eeb7994fe84b1ca8465270",
+    "p": [
+      [
+        0.0,
+        0.5,
+        0.0
+      ],
+      [
+        0.5,
+        0.0,
+        0.5
+      ],
+      [
+        0.0,
+        0.5,
+        0.0
+      ]
+    ],
+    "costs": [
+      6.0,
+      7.23606797749979
+    ],
+    "duplicates": 0,
+    "reference_hash": "f71bed835085a99ba2e1f10a584c212955860ba4dcffb0ba548f646f6715cf8d",
+    "config_hash": "f4b870fe4ef64434e64af87d83095a5e7c4fbd5ac40c88611ce9ad8576905504"
+  }
+}

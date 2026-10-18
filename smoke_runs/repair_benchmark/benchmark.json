@@ -1,0 +1,10 @@
+{
+  "synthetic_only": true,
+  "customers": 8,
+  "repairs": 200,
+  "seconds": 0.016159099999640603,
+  "repairs_per_second": 12376.92693308713,
+  "includes_validation_and_distance_construction": true,
+  "neural_throughput": "not_measured",
+  "cvrp100_throughput": "not_measured"
+}

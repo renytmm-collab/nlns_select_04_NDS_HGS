@@ -1,0 +1,23 @@
+{
+  "schema": 1,
+  "status": "UNCONFIRMED_NOT_RUNNABLE",
+  "problem": "CVRP",
+  "customers": 100,
+  "distribution": null,
+  "distance": null,
+  "reference": {
+    "M": 4,
+    "duplicates": "keep_equal_weight",
+    "seeds": [101, 102, 103, 104],
+    "budget": {"kind": "seconds", "limit": null},
+    "solver": {"name": "HGS", "version": null, "binary_sha256": null}
+  },
+  "groups": {"baseline": 0.0, "relation": null, "shuffled_relation": null},
+  "training_seeds": null,
+  "destroy_size": null,
+  "training_steps": null,
+  "validation_budget": null,
+  "test_seconds_per_instance": null,
+  "test_iterations": null,
+  "selection_rule": null
+}

@@ -1,0 +1,35 @@
+{
+  "schema": 2,
+  "kind": "experiment",
+  "budgets_confirmed": false,
+  "distribution": null,
+  "customers": 100,
+  "distance": "euclidean_float64",
+  "destroy_size": 10,
+  "group": "baseline",
+  "lambda": 0.0,
+  "seed": 31,
+  "shuffle_seed": 73,
+  "model": {"width": 64, "heads": 4, "layers": 2},
+  "insertion": "action_order_existing_first",
+  "acceptance": "strict_improvement",
+  "reference": {
+    "M": 4,
+    "duplicates": "keep_equal_weight",
+    "seeds": [101, 102, 103, 104],
+    "budget": {"kind": "iterations", "limit": null},
+    "solver": {"name": null, "version": null, "binary_sha256": null}
+  },
+  "reference_generation": {"max_2opt_moves_per_start": null},
+  "training": {
+    "steps": null,
+    "batch_size": 8,
+    "rollouts": 8,
+    "learning_rate": 0.0001,
+    "grad_clip": 1.0,
+    "device": "cpu",
+    "threads": 1,
+    "checkpoint_rule": "last_step"
+  },
+  "evaluation": {"repeats": null, "iterations": null, "seconds": null, "seeds": [51, 52, 53]}
+}

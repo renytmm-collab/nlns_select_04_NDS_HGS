@@ -1,0 +1,30 @@
+{
+  "status": "complete",
+  "kind": "reference_import_only",
+  "config": {
+    "schema": 1,
+    "reference": {
+      "M": 2,
+      "duplicates": "keep_equal_weight",
+      "seeds": [
+        11,
+        12
+      ],
+      "budget": {
+        "kind": "iterations",
+        "limit": 1
+      },
+      "solver": {
+        "name": "synthetic-fixture",
+        "version": "1",
+        "binary_sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+      }
+    }
+  },
+  "config_hash": "48039976df3ba7078ae532557369ebfcce01b4995fa1a862afdd97bdb552d7e4",
+  "data_hash": "153e0bc57578598063aec0b46e38535737510d49a07a4ac949a13f7027157b2b",
+  "reference_hash": "664e08f092b27035eac79821b4d88cb8f942cf834bac26a41651dc3006a8746a",
+  "python": "3.11.1 (tags/v3.11.1:a7a450f, Dec  6 2022, 19:58:39) [MSC v.1934 64 bit (AMD64)]",
+  "platform": "Windows-10-10.0.22631-SP0",
+  "code_hash": "4a491767768218cfa300cbda2a74fb2fd43d4350838ce0e0502f77d900839ec0"
+}

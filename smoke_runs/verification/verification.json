@@ -1,0 +1,28 @@
+{
+  "tests": 26,
+  "failures": 0,
+  "errors": 0,
+  "skipped": [
+    {
+      "test": "test_full_synthetic_lifecycle_and_resume (test_neural.Neural.test_full_synthetic_lifecycle_and_resume)",
+      "reason": "PyTorch absent; neural validation must run on server"
+    },
+    {
+      "test": "test_lambda_zero_and_rng (test_neural.Neural.test_lambda_zero_and_rng)",
+      "reason": "PyTorch absent; neural validation must run on server"
+    },
+    {
+      "test": "test_mask_conditional_dependence_and_export (test_neural.Neural.test_mask_conditional_dependence_and_export)",
+      "reason": "PyTorch absent; neural validation must run on server"
+    },
+    {
+      "test": "test_symmetry_shared_gradient_and_input_isolation (test_neural.Neural.test_symmetry_shared_gradient_and_input_isolation)",
+      "reason": "PyTorch absent; neural validation must run on server"
+    }
+  ],
+  "passed": 22,
+  "seconds": 0.29162929999984044,
+  "synthetic_only": true,
+  "strict_neural": false,
+  "python": "3.11.1 (tags/v3.11.1:a7a450f, Dec  6 2022, 19:58:39) [MSC v.1934 64 bit (AMD64)]"
+}

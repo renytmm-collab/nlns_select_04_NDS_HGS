@@ -1,0 +1,32 @@
+[
+  {
+    "id": "synthetic",
+    "split": "train",
+    "coordinates": [
+      [
+        0,
+        0
+      ],
+      [
+        1,
+        0
+      ],
+      [
+        2,
+        0
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "demands": [
+      0,
+      1,
+      1,
+      1
+    ],
+    "capacity": 2,
+    "distance": "euclidean_float64"
+  }
+]

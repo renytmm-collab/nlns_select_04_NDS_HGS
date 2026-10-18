@@ -1,0 +1,4 @@
+# Install manually on the server after selecting the correct CPU/CUDA wheel.
+# The data layer, reference generator and Python repair need only stdlib.
+# No install or download is performed by any project command.
+torch>=2.6,<3

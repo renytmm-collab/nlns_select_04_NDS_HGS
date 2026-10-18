@@ -1,0 +1,56 @@
+{
+  "synthetic": [
+    {
+      "instance_id": "synthetic",
+      "instance_hash": "c29381df02cd350ef945f26dcb1646b2d5b75f8175eeb7994fe84b1ca8465270",
+      "status": "success",
+      "source": "in-memory fixture, no solver executed",
+      "solver": {
+        "name": "synthetic-fixture",
+        "version": "1",
+        "binary_sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "budget": {
+        "kind": "iterations",
+        "limit": 1
+      },
+      "seed": 11,
+      "routes": [
+        [
+          1,
+          2
+        ],
+        [
+          3
+        ]
+      ],
+      "cost": 6.0
+    },
+    {
+      "instance_id": "synthetic",
+      "instance_hash": "c29381df02cd350ef945f26dcb1646b2d5b75f8175eeb7994fe84b1ca8465270",
+      "status": "success",
+      "source": "in-memory fixture, no solver executed",
+      "solver": {
+        "name": "synthetic-fixture",
+        "version": "1",
+        "binary_sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "budget": {
+        "kind": "iterations",
+        "limit": 1
+      },
+      "seed": 12,
+      "routes": [
+        [
+          1
+        ],
+        [
+          2,
+          3
+        ]
+      ],
+      "cost": 7.23606797749979
+    }
+  ]
+}

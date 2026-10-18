@@ -4,7 +4,6 @@ import importlib.util
 from pathlib import Path
 import unittest
 import uuid
-from unittest.mock import patch
 
 AVAILABLE = importlib.util.find_spec("torch") is not None
 
@@ -89,8 +88,8 @@ class Neural(unittest.TestCase):
         root.mkdir(parents=True)
         fixture = root/"fixture"
         def run(args):
-            with patch("sys.stdout"):
-                self.assertEqual(main(args), 0, str(args))
+            # Keep the real stdout: lazy torch/SymPy imports inspect its encoding.
+            self.assertEqual(main(args), 0, str(args))
         run(["make-smoke", "--run-dir", str(fixture)])
         base = ["--config", str(fixture/"relation.json"), "--data", str(fixture/"data.json"), "--states", str(fixture/"states.json")]
         train_args = base+["--references", str(fixture/"references.json"), "--synthetic"]

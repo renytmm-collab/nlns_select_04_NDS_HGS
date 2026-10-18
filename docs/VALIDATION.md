@@ -1,5 +1,13 @@
 # 本地验证记录
 
+## 后续服务器反馈与修正
+
+用户提供的服务器日志：Python 3.11.16、PyTorch 2.5.1+cu121、CUDA 12.1、Tesla V100-SXM2-16GB，CPU/CUDA 基础前向与反向通过。首次完整验证为 25 通过、1 失败、1 错误、0 跳过，不能视为全链路通过。
+
+全链路测试用 MagicMock 替换 sys.stdout，首个错误为 encode() 的 encoding 参数收到 MagicMock；随后 Adam 初始化遇到 sympy.printing.str 缺失。已移除神经及系统测试的 stdout mock，保留真实输出流；第二个错误可能是首次依赖导入失败后的进程内残留，须新进程重跑确认，不能据此直接升级/修复共享环境。
+
+修正只涉及 tests/test_neural.py 与 tests/test_system.py，不改变训练算法或依赖声明。本地仍无 PyTorch，服务器修正后的全链路结果待补充。PROJECT_ROOT 应显式设为日志确认的 /data/kcx/projects/select_04_NDS_HGS。
+
 日期：2026-10-18。Windows、Python 3.11.1。未安装新依赖，未编译，未执行真实参考生成、研究训练、测试集搜索、服务器任务或 Git 提交。
 
 ## 已运行

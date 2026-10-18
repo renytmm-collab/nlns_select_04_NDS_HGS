@@ -134,17 +134,15 @@ class DiskContracts(unittest.TestCase):
         cls.root = Path("test_artifacts") / ("contracts-" + uuid.uuid4().hex)
         cls.root.mkdir(parents=True)
         cls.bundle = cls.root / "fixture"
-        with patch("sys.stdout"):
-            assert main(["make-smoke", "--run-dir", str(cls.bundle)]) == 0
+        assert main(["make-smoke", "--run-dir", str(cls.bundle)]) == 0
 
     def base(self, group="baseline"):
         return ["--config", str(self.bundle/(group+".json")), "--data", str(self.bundle/"data.json"), "--states", str(self.bundle/"states.json")]
 
     def test_preflight_readonly_and_reference_boundary(self):
         before = set(self.root.rglob("*"))
-        with patch("sys.stdout"):
-            self.assertEqual(main(["preflight", *self.base()]), 0)
-            self.assertEqual(main(["preflight", *self.base("relation"), "--references", str(self.bundle/"references.json")]), 0)
+        self.assertEqual(main(["preflight", *self.base()]), 0)
+        self.assertEqual(main(["preflight", *self.base("relation"), "--references", str(self.bundle/"references.json")]), 0)
         self.assertEqual(before, set(self.root.rglob("*")))
         with patch("sys.stderr"):
             self.assertEqual(main(["preflight", "--task", "evaluate", *self.base(), "--references", "file-must-not-be-opened.json"]), 1)

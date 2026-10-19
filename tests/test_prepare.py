@@ -19,7 +19,7 @@ def load_script():
     return module
 
 
-def synthetic_zip(path, count=12, customers=8):
+def synthetic_zip(path, count=12, customers=8, corrupt=()):
     module = load_script()
     from relation_lab.contracts import validate_routes
     from relation_lab.vrp import insert_sequence
@@ -39,6 +39,9 @@ def synthetic_zip(path, count=12, customers=8):
                     "capacity": 6.0, "distance": "euclidean_float64", "split": "train", "id": stem}
             routes = insert_sequence(inst, [], list(range(1, customers + 1)))
             validate_routes(inst, routes)
+            if j in corrupt:  # published solution that repeats a customer, like 91 real XML100 files
+                routes = [list(r) for r in routes]
+                routes[-1].append(routes[0][0])
             body = ["Route #%d: %s" % (k + 1, " ".join(map(str, r))) for k, r in enumerate(routes)]
             body.append("Cost %d" % module.rounded_cost(inst, routes))
             archive.writestr("Vrp-Set-XML100/solutions/%s.sol" % stem, "\n".join(body) + "\n")
@@ -81,6 +84,21 @@ class PrepareXml100(unittest.TestCase):
                 self.assertEqual(module.main(["--out-dir", str(Path(tmp) / "b"), "--src-dir", str(extracted)] + args), 0)
             for name in ("data.json", "states.json"):
                 self.assertEqual(read_json(Path(tmp) / "a" / name), read_json(Path(tmp) / "b" / name))
+
+    def test_invalid_published_solutions_are_excluded(self):
+        module = load_script()
+        with tempfile.TemporaryDirectory() as tmp:
+            archive, out = Path(tmp) / "x.zip", Path(tmp) / "out"
+            synthetic_zip(archive, count=14, corrupt={0, 5})
+            with contextlib.redirect_stdout(io.StringIO()):
+                code = module.main(["--out-dir", str(out), "--zip", str(archive), "--train", "6", "--validation", "2",
+                                    "--test", "4", "--customers", "8", "--destroy-size", "3"])
+            self.assertEqual(code, 0)
+            manifest = read_json(out / "prepare_manifest.json")
+            self.assertEqual(sorted(manifest["excluded_ids"]), ["XML100_1111_01", "XML100_1111_06"])
+            self.assertEqual(manifest["paired_instances"], 14)
+            used = {i for ids in manifest["ids"].values() for i in ids}
+            self.assertFalse(used & set(manifest["excluded_ids"]))
 
     def test_wrong_customer_count_rejected(self):
         module = load_script()

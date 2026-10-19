@@ -1,0 +1,138 @@
+{
+  "smoke-0": [
+    {
+      "instance_id": "smoke-0",
+      "instance_hash": "86679bbb84c236f4d5c17dc00d3910e0ca7bc90000ed669f70cae207e13dfff2",
+      "status": "success",
+      "source": "synthetic fixture only",
+      "solver": {
+        "name": "synthetic-fixture",
+        "version": "1",
+        "binary_sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "budget": {
+        "kind": "iterations",
+        "limit": 1
+      },
+      "seed": 101,
+      "routes": [
+        [
+          6,
+          7,
+          2
+        ],
+        [
+          8,
+          1,
+          3
+        ],
+        [
+          4,
+          5
+        ]
+      ],
+      "cost": 3.84914080815481
+    },
+    {
+      "instance_id": "smoke-0",
+      "instance_hash": "86679bbb84c236f4d5c17dc00d3910e0ca7bc90000ed669f70cae207e13dfff2",
+      "status": "success",
+      "source": "synthetic fixture only",
+      "solver": {
+        "name": "synthetic-fixture",
+        "version": "1",
+        "binary_sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "budget": {
+        "kind": "iterations",
+        "limit": 1
+      },
+      "seed": 102,
+      "routes": [
+        [
+          1,
+          4,
+          7
+        ],
+        [
+          8,
+          5,
+          2
+        ],
+        [
+          3,
+          6
+        ]
+      ],
+      "cost": 3.814705714115003
+    }
+  ],
+  "smoke-1": [
+    {
+      "instance_id": "smoke-1",
+      "instance_hash": "b0180a6e3d45385bfc5a7050964f6188b74336acdc11478a82465d58d167a185",
+      "status": "success",
+      "source": "synthetic fixture only",
+      "solver": {
+        "name": "synthetic-fixture",
+        "version": "1",
+        "binary_sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "budget": {
+        "kind": "iterations",
+        "limit": 1
+      },
+      "seed": 101,
+      "routes": [
+        [
+          7,
+          2,
+          6
+        ],
+        [
+          3,
+          8,
+          1
+        ],
+        [
+          4,
+          5
+        ]
+      ],
+      "cost": 5.959471104787151
+    },
+    {
+      "instance_id": "smoke-1",
+      "instance_hash": "b0180a6e3d45385bfc5a7050964f6188b74336acdc11478a82465d58d167a185",
+      "status": "success",
+      "source": "synthetic fixture only",
+      "solver": {
+        "name": "synthetic-fixture",
+        "version": "1",
+        "binary_sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "budget": {
+        "kind": "iterations",
+        "limit": 1
+      },
+      "seed": 102,
+      "routes": [
+        [
+          1,
+          4,
+          7
+        ],
+        [
+          8,
+          2,
+          5
+        ],
+        [
+          3,
+          6
+        ]
+      ],
+      "cost": 5.728695264137483
+    }
+  ]
+}

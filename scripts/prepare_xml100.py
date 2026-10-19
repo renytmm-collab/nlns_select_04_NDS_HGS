@@ -143,13 +143,29 @@ def random_order_state(instance, key):
     return insert_sequence(instance, [], order)
 
 
+def published_solution_valid(source, stem):
+    """False when files cannot be parsed or the solution repeats/omits a customer or breaks capacity."""
+    try:
+        parsed = parse_vrp(source.read(source.vrp[stem]), stem)
+        routes, _ = parse_sol(source.read(source.sol[stem]), stem)
+        n = len(parsed["demands"]) - 1
+        if sorted(v for r in routes for v in r) != list(range(1, n + 1)):
+            return False
+        return all(sum(parsed["demands"][v] for v in r) <= parsed["capacity"] for r in routes)
+    except (ValueError, KeyError, IndexError):
+        return False
+
+
 def build(args, source, archive_hash, out):
     template = read_json(ROOT / "configs" / "experiment_template.json")
     if True:
-        stems = source.stems()
+        paired = source.stems()
+        stems, excluded = [], []
+        for stem in paired:  # only instances whose published solution is a valid CVRP solution
+            (stems if published_solution_valid(source, stem) else excluded).append(stem)
         total = args.train + args.validation + args.test
         if len(stems) < total:
-            raise SystemExit("source has only %d paired .vrp/.sol instances, need %d" % (len(stems), total))
+            raise SystemExit("source has only %d valid paired .vrp/.sol instances (%d excluded), need %d" % (len(stems), len(excluded), total))
         chosen = random.Random(args.sample_seed).sample(stems, total)
         plan = ([("train", s) for s in chosen[:args.train]]
                 + [("validation", s) for s in chosen[args.train:args.train + args.validation]]
@@ -207,6 +223,8 @@ def build(args, source, archive_hash, out):
     summary = {"archive_sha256": archive_hash, "customers": customers, "sample_seed": args.sample_seed,
                "instances": {s: sum(d["split"] == s for d in data) for s in ("train", "validation", "test")},
                "states": len(states), "reference_rounded_cost_mismatches": mismatches,
+               "paired_instances": len(paired), "excluded_invalid_published_solution": len(excluded),
+               "excluded_ids": excluded,
                "ids": {s: [d["id"] for d in data if d["split"] == s] for s in ("train", "validation", "test")},
                "note": "budgets_confirmed=false; set true only after measuring throughput"}
     write_json(out / "prepare_manifest.json", summary)

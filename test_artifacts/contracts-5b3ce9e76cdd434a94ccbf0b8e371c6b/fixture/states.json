@@ -1,0 +1,82 @@
+[
+  {
+    "instance_id": "smoke-0",
+    "instance_hash": "86679bbb84c236f4d5c17dc00d3910e0ca7bc90000ed669f70cae207e13dfff2",
+    "routes": [
+      [
+        1,
+        4,
+        7
+      ],
+      [
+        2,
+        5,
+        8
+      ],
+      [
+        3,
+        6
+      ]
+    ]
+  },
+  {
+    "instance_id": "smoke-1",
+    "instance_hash": "b0180a6e3d45385bfc5a7050964f6188b74336acdc11478a82465d58d167a185",
+    "routes": [
+      [
+        1,
+        4,
+        7
+      ],
+      [
+        2,
+        5,
+        8
+      ],
+      [
+        3,
+        6
+      ]
+    ]
+  },
+  {
+    "instance_id": "smoke-2",
+    "instance_hash": "9be16dd14834ca8c06a04a3eb1c9f1ad64c9ed393954a69fe50361751c8d7882",
+    "routes": [
+      [
+        1,
+        4,
+        7
+      ],
+      [
+        2,
+        5,
+        8
+      ],
+      [
+        3,
+        6
+      ]
+    ]
+  },
+  {
+    "instance_id": "smoke-3",
+    "instance_hash": "5a31948dc3d2b62386b66ad3c5a52ef939f9f62385ea80856384a8ce03720f7b",
+    "routes": [
+      [
+        1,
+        4,
+        7
+      ],
+      [
+        2,
+        5,
+        8
+      ],
+      [
+        3,
+        6
+      ]
+    ]
+  }
+]

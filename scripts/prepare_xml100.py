@@ -1,8 +1,10 @@
 """Convert CVRPLIB XML100 (Queiroga et al. 2021) into this project's DATA/STATES/REFERENCES/configs.
 
-Standard library only. Run from PROJECT_ROOT on a machine that can reach CVRPLIB, or pass --zip.
+Standard library only; no download. Get instances.7z and solutions.7z from
+https://galgos.inf.puc-rio.br/cvrplib/index.php/en/xml100 , extract both under one directory
+(7z x instances.7z; 7z x solutions.7z), then:
 
-  python -B scripts/prepare_xml100.py --out-dir runs/xml100_v1 [--zip Vrp-Set-XML100.zip]
+  python -B scripts/prepare_xml100.py --out-dir runs/xml100_v1 --src-dir /path/to/xml100
 
 What it does (all deterministic given --sample-seed):
   * samples disjoint train/validation/test instances from the zip (each instance is its own family);
@@ -23,7 +25,6 @@ import math
 import random
 import re
 import sys
-import urllib.request
 import zipfile
 from pathlib import Path
 
@@ -34,8 +35,6 @@ from relation_lab.contracts import instance_hash, validate_routes  # noqa: E402
 from relation_lab.runtime import read_json, write_json  # noqa: E402
 from relation_lab.vrp import initial_solution, insert_sequence  # noqa: E402
 
-URLS = ("https://vrp.galgos.inf.puc-rio.br/media/com_vrp/instances/Vrp-Set-XML100.zip",
-        "http://vrp.galgos.inf.puc-rio.br/media/com_vrp/instances/Vrp-Set-XML100.zip")
 DISTRIBUTION = "XML100-mixed-sample-v1"
 
 
@@ -47,23 +46,40 @@ def sha256_file(path):
     return h.hexdigest()
 
 
-def download(target):
-    errors = []
-    for url in URLS:
-        try:
-            request = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
-            with urllib.request.urlopen(request, timeout=120) as response, open(target, "xb") as out:
-                while True:
-                    block = response.read(1 << 20)
-                    if not block:
-                        break
-                    out.write(block)
-            return url
-        except Exception as exc:  # report every URL, then fail
-            errors.append("%s -> %s" % (url, exc))
-            if Path(target).exists():
-                Path(target).unlink()
-    raise SystemExit("download failed; fetch Vrp-Set-XML100.zip manually and pass --zip\n" + "\n".join(errors))
+class Source:
+    """Paired <stem>.vrp / <stem>.sol files from a zip or an already extracted directory."""
+
+    def __init__(self, zip_path=None, directory=None):
+        self.archive = zipfile.ZipFile(zip_path) if zip_path else None
+        if self.archive:
+            names = self.archive.namelist()
+        else:
+            names = [str(p) for p in Path(directory).rglob("*") if p.is_file()]
+        self.vrp, self.sol = {}, {}
+        for name in names:
+            path = Path(name)
+            if path.suffix == ".vrp":
+                self.vrp[path.stem] = name
+            elif path.suffix == ".sol":
+                self.sol[path.stem] = name
+
+    def stems(self):
+        return sorted(set(self.vrp) & set(self.sol))
+
+    def read(self, name):
+        if self.archive:
+            return self.archive.read(name).decode("utf-8")
+        return Path(name).read_text(encoding="utf-8")
+
+    def identity(self, zip_path):
+        if zip_path:
+            return sha256_file(zip_path)
+        digest = hashlib.sha256()  # hash of content of every used file, in stem order
+        for stem in self.stems():
+            digest.update(stem.encode())
+            digest.update(Path(self.vrp[stem]).read_bytes())
+            digest.update(Path(self.sol[stem]).read_bytes())
+        return digest.hexdigest()
 
 
 def parse_vrp(text, name):
@@ -127,16 +143,13 @@ def random_order_state(instance, key):
     return insert_sequence(instance, [], order)
 
 
-def build(args, archive_path, archive_hash, out):
+def build(args, source, archive_hash, out):
     template = read_json(ROOT / "configs" / "experiment_template.json")
-    with zipfile.ZipFile(archive_path) as archive:
-        names = archive.namelist()
-        vrp = {m.group(1): n for n in names for m in [re.search(r"instances/([^/]+)\.vrp$", n)] if m}
-        sol = {m.group(1): n for n in names for m in [re.search(r"solutions/([^/]+)\.sol$", n)] if m}
-        stems = sorted(set(vrp) & set(sol))
+    if True:
+        stems = source.stems()
         total = args.train + args.validation + args.test
         if len(stems) < total:
-            raise SystemExit("zip has only %d paired instances, need %d" % (len(stems), total))
+            raise SystemExit("source has only %d paired .vrp/.sol instances, need %d" % (len(stems), total))
         chosen = random.Random(args.sample_seed).sample(stems, total)
         plan = ([("train", s) for s in chosen[:args.train]]
                 + [("validation", s) for s in chosen[args.train:args.train + args.validation]]
@@ -146,7 +159,7 @@ def build(args, archive_path, archive_hash, out):
         budget = {"kind": "iterations", "limit": 1}
         data, states, references, mismatches, customers = [], [], {}, 0, None
         for split, stem in plan:
-            parsed = parse_vrp(archive.read(vrp[stem]).decode("utf-8"), stem)
+            parsed = parse_vrp(source.read(source.vrp[stem]), stem)
             n = len(parsed["demands"]) - 1
             if customers is None:
                 customers = n
@@ -168,7 +181,7 @@ def build(args, archive_path, archive_hash, out):
                     seen.add(key)
                     states.append({"instance_id": stem, "instance_hash": ih, "routes": routes})
             if split == "train":
-                routes, file_cost = parse_sol(archive.read(sol[stem]).decode("utf-8"), stem)
+                routes, file_cost = parse_sol(source.read(source.sol[stem]), stem)
                 cost = validate_routes(inst, routes)  # raises if node mapping or capacity is wrong
                 if parsed["edge_weight_type"] == "EUC_2D" and rounded_cost(inst, routes) != round(file_cost):
                     mismatches += 1
@@ -200,10 +213,18 @@ def build(args, archive_path, archive_hash, out):
     return summary
 
 
+def require_new(out):
+    if out.exists():
+        raise SystemExit("out-dir already exists: " + str(out))
+    out.mkdir(parents=True)
+
+
 def main(argv=None):
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     p.add_argument("--out-dir", required=True, help="new directory; must not exist")
-    p.add_argument("--zip", help="local Vrp-Set-XML100.zip; downloaded to <out-dir>.zip if omitted")
+    group = p.add_mutually_exclusive_group(required=True)
+    group.add_argument("--src-dir", help="directory holding extracted XML100 .vrp and .sol files (searched recursively)")
+    group.add_argument("--zip", help="zip containing XML100 .vrp and .sol files")
     p.add_argument("--train", type=int, default=200)
     p.add_argument("--validation", type=int, default=50)
     p.add_argument("--test", type=int, default=100)
@@ -222,12 +243,9 @@ def main(argv=None):
     p.add_argument("--max-cost-mismatch-fraction", type=float, default=0.02)
     args = p.parse_args(argv)
     out = Path(args.out_dir)
-    out.mkdir(parents=True, exist_ok=False)
-    archive = args.zip
-    if archive is None:
-        archive = str(out) + ".zip"
-        print("downloaded from", download(archive))
-    summary = build(args, archive, sha256_file(archive), out)
+    require_new(out)
+    source = Source(zip_path=args.zip, directory=args.src_dir)
+    summary = build(args, source, source.identity(args.zip), out)
     print(json.dumps({k: v for k, v in summary.items() if k != "ids"}, indent=2))
     return 0
 

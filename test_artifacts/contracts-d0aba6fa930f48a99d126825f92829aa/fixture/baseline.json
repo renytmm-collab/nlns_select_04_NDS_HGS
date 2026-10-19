@@ -1,0 +1,59 @@
+{
+  "schema": 2,
+  "kind": "synthetic",
+  "budgets_confirmed": false,
+  "distribution": "synthetic-uniform-eight-v1",
+  "customers": 8,
+  "distance": "euclidean_float64",
+  "destroy_size": 3,
+  "group": "baseline",
+  "lambda": 0.0,
+  "seed": 31,
+  "shuffle_seed": 73,
+  "model": {
+    "width": 16,
+    "heads": 2,
+    "layers": 1
+  },
+  "insertion": "action_order_existing_first",
+  "acceptance": "strict_improvement",
+  "reference": {
+    "M": 2,
+    "duplicates": "keep_equal_weight",
+    "seeds": [
+      101,
+      102
+    ],
+    "budget": {
+      "kind": "iterations",
+      "limit": 1
+    },
+    "solver": {
+      "name": "synthetic-fixture",
+      "version": "1",
+      "binary_sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+    }
+  },
+  "reference_generation": {
+    "max_2opt_moves_per_start": 2
+  },
+  "training": {
+    "steps": 2,
+    "batch_size": 2,
+    "rollouts": 3,
+    "learning_rate": 0.001,
+    "grad_clip": 1.0,
+    "device": "cpu",
+    "threads": 1,
+    "checkpoint_rule": "last_step"
+  },
+  "evaluation": {
+    "repeats": 2,
+    "iterations": 3,
+    "seconds": 0.05,
+    "seeds": [
+      51,
+      52
+    ]
+  }
+}

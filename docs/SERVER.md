@@ -36,10 +36,10 @@ python -B -m relation_lab.experiment train --synthetic \
 
 ## 开源数据：CVRPLIB XML100
 
-scripts/prepare_xml100.py 把 Queiroga 等人（2021）的 XML100（CVRP100，附已发布最优解）转成本系统的 data/states/references 和三组配置。只用标准库；服务器需能访问 CVRPLIB，或先手动下载 Vrp-Set-XML100.zip 并用 --zip 指定。
+scripts/prepare_xml100.py 把 Queiroga 等人（2021）的 XML100（CVRP100，附已发布最优解）转成本系统的 data/states/references 和三组配置。只用标准库，脚本不联网。旧的 Vrp-Set-XML100.zip 链接已失效；现在从 https://galgos.inf.puc-rio.br/cvrplib/index.php/en/xml100 下载 instances.7z 和 solutions.7z，解压到同一目录（需要 7z，例如 `7z x instances.7z`、`7z x solutions.7z`），再用 --src-dir 指向该目录。脚本递归查找成对的 .vrp 和 .sol。也可用 --zip 指定含这两类文件的 zip。
 
 ```bash
-python -B scripts/prepare_xml100.py --out-dir runs/xml100_v1 --zip /path/to/Vrp-Set-XML100.zip
+python -B scripts/prepare_xml100.py --out-dir runs/xml100_v1 --src-dir /path/to/xml100
 ```
 
 默认抽样 train 200 / validation 50 / test 100，互不相交，由 --sample-seed 固定。states 对每个实例给一个按客户编号的贪心起点，train 实例另加 3 个随机顺序贪心起点，起点规则不使用参考解。references 是 train 实例的已发布最优解（M=1，按未取整距离重算成本）。这些解对取整距离最优，对本系统的浮点距离只是接近最优。脚本核对取整成本，若不匹配比例超过 2% 就失败。输出配置中 budgets_confirmed=false；先用小步数测吞吐，再按实测改 true 并调整 steps 与评价预算。

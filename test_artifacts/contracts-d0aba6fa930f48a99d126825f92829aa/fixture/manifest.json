@@ -1,0 +1,94 @@
+{
+  "schema": 2,
+  "status": "complete",
+  "command": "make-smoke",
+  "identity": {
+    "config": "9af6309633eef97e2810d5e378ab1351870639d4a5da5884ed81266b2df8bbec",
+    "data": "9f42725d12bbbd4b6497aa1d2365e262b89ccb763ac09adb8741b3f61a007d32",
+    "states": "ead06f1a8b58681e786edb2eb4b9465aeb4b607cba7f765116a1603a64bc9a37",
+    "references": "1f598216e70780ff021b52098c32cfa1aca0f1d9d9303e8117454e81cb79cce3",
+    "code": "2d5308ef5a21c76aabe21827ba3dc764c34d0d72721a7ca0691dda8253bb0f6c"
+  },
+  "config": {
+    "schema": 2,
+    "kind": "synthetic",
+    "budgets_confirmed": false,
+    "distribution": "synthetic-uniform-eight-v1",
+    "customers": 8,
+    "distance": "euclidean_float64",
+    "destroy_size": 3,
+    "group": "baseline",
+    "lambda": 0.0,
+    "seed": 31,
+    "shuffle_seed": 73,
+    "model": {
+      "width": 16,
+      "heads": 2,
+      "layers": 1
+    },
+    "insertion": "action_order_existing_first",
+    "acceptance": "strict_improvement",
+    "reference": {
+      "M": 2,
+      "duplicates": "keep_equal_weight",
+      "seeds": [
+        101,
+        102
+      ],
+      "budget": {
+        "kind": "iterations",
+        "limit": 1
+      },
+      "solver": {
+        "name": "synthetic-fixture",
+        "version": "1",
+        "binary_sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+      }
+    },
+    "reference_generation": {
+      "max_2opt_moves_per_start": 2
+    },
+    "training": {
+      "steps": 2,
+      "batch_size": 2,
+      "rollouts": 3,
+      "learning_rate": 0.001,
+      "grad_clip": 1.0,
+      "device": "cpu",
+      "threads": 1,
+      "checkpoint_rule": "last_step"
+    },
+    "evaluation": {
+      "repeats": 2,
+      "iterations": 3,
+      "seconds": 0.05,
+      "seeds": [
+        51,
+        52
+      ]
+    }
+  },
+  "parent": null,
+  "code_files": {
+    "__init__.py": "6f666ff45a02c640975921fafbdf5942bcf7061a69eede14692cbad961a67636",
+    "__main__.py": "02ba4d751cdae63ff801d17a4c63be6813f32e0dd25b08cb093433030991f8e6",
+    "contracts.py": "2374e9a730af3431b8bd9db9b8b856186d66a2c18c5a1ac0d59ab10ad6669348",
+    "evaluation.py": "1aa6c7ca9752f5a59a065031ecf8a6f593a71a990de1f5f3abd9142582b8adbc",
+    "experiment.py": "517163b6fb964954ea62f852b6e1d99421131c3a6ff384597dd32186c6293ec5",
+    "fixtures.py": "16d3906ecd7849c92db1aff720d104d31cf8c795898122210c2a194eaced2909",
+    "neural.py": "4571273ffbdb533053293aba1047e8fe5db4de12a3d345ce1b8466ed1864fd40",
+    "references.py": "10ec73010766a92d0392da3f2b72c069dea166dbce9a5a1d64314a5b70167926",
+    "runtime.py": "311debb95f034c8415a1184026a7e444e25cbcfedb4e61ab6546a3a7ad617f0b",
+    "search.py": "73c8d4d58029911afbde5b10bfbb96e5e969e0e204a843ccfd9ca8a5bcadeb34",
+    "training.py": "58e8f4021c5cd3671326a510f03e04b6c23fc5f18887ac61d6f214660298f1d7",
+    "vrp.py": "6d7b5ba57c0aeddbd9269571f8bb89dd7e640fd411b1dd0e199e6c534d704a00"
+  },
+  "environment": {
+    "python": "3.11.1 (tags/v3.11.1:a7a450f, Dec  6 2022, 19:58:39) [MSC v.1934 64 bit (AMD64)]",
+    "platform": "Windows-10-10.0.22631-SP0"
+  },
+  "started_unix": 1792327303.614161,
+  "attempted_step": 0,
+  "committed_step": 0,
+  "ended_unix": 1792327303.620299
+}

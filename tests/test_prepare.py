@@ -68,6 +68,20 @@ class PrepareXml100(unittest.TestCase):
             held_out = {s["instance_id"] for s in states if s["instance_id"] not in splits["train"]}
             self.assertEqual(sum(s["instance_id"] in held_out for s in states), 6)  # one state per val/test instance
 
+    def test_extracted_directory_matches_zip(self):
+        module = load_script()
+        with tempfile.TemporaryDirectory() as tmp:
+            archive, extracted = Path(tmp) / "x.zip", Path(tmp) / "src"
+            synthetic_zip(archive)
+            with zipfile.ZipFile(archive) as z:
+                z.extractall(extracted)
+            args = ["--train", "6", "--validation", "2", "--test", "4", "--customers", "8", "--destroy-size", "3"]
+            with contextlib.redirect_stdout(io.StringIO()):
+                self.assertEqual(module.main(["--out-dir", str(Path(tmp) / "a"), "--zip", str(archive)] + args), 0)
+                self.assertEqual(module.main(["--out-dir", str(Path(tmp) / "b"), "--src-dir", str(extracted)] + args), 0)
+            for name in ("data.json", "states.json"):
+                self.assertEqual(read_json(Path(tmp) / "a" / name), read_json(Path(tmp) / "b" / name))
+
     def test_wrong_customer_count_rejected(self):
         module = load_script()
         with tempfile.TemporaryDirectory() as tmp:
